@@ -1,0 +1,88 @@
+{
+  "name": "@rahul_dadhich15/regex-validation-toolkit",
+  "version": "0.1.0",
+  "description": "Production-ready, dependency-free toolkit for reusable regex patterns, composable regex construction, robust email validation, and strict IPv4/IPv6 validation.",
+  "keywords": [
+    "regex",
+    "regexp",
+    "validation",
+    "validator",
+    "email-validator",
+    "ip-validator",
+    "ipv4",
+    "ipv6",
+    "regex-builder",
+    "regex-patterns",
+    "typescript"
+  ],
+  "author": {
+    "name": "Rahul Dadhich"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rahuldadhich1517-sys/regex-validation-toolkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rahuldadhich1517-sys/regex-validation-toolkit/issues"
+  },
+  "homepage": "https://github.com/rahuldadhich1517-sys/regex-validation-toolkit#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./regex-patterns": {
+      "types": "./dist/regex-patterns/index.d.ts",
+      "import": "./dist/regex-patterns/index.js",
+      "require": "./dist/regex-patterns/index.cjs"
+    },
+    "./regex-builder": {
+      "types": "./dist/regex-builder/index.d.ts",
+      "import": "./dist/regex-builder/index.js",
+      "require": "./dist/regex-builder/index.cjs"
+    },
+    "./email-validator": {
+      "types": "./dist/email-validator/index.d.ts",
+      "import": "./dist/email-validator/index.js",
+      "require": "./dist/email-validator/index.cjs"
+    },
+    "./ip-validator": {
+      "types": "./dist/ip-validator/index.d.ts",
+      "import": "./dist/ip-validator/index.js",
+      "require": "./dist/ip-validator/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepack": "npm run build"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.8",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}
