@@ -4,6 +4,8 @@ A production-grade, zero-dependency TypeScript toolkit for reusable regular expr
 
 [![CI](https://github.com/rahuldadhich1517-sys/regex-validation-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/rahuldadhich1517-sys/regex-validation-toolkit/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/@rahul_dadhich15/regex-validation-toolkit.svg)](https://www.npmjs.com/package/@rahul_dadhich15/regex-validation-toolkit)
+[![npm downloads](https://img.shields.io/npm/dm/@rahul_dadhich15/regex-validation-toolkit.svg)](https://www.npmjs.com/package/@rahul_dadhich15/regex-validation-toolkit)
+[![TypeScript](https://img.shields.io/badge/TypeScript-supported-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node Version](https://img.shields.io/node/v/@rahul_dadhich15/regex-validation-toolkit)](https://nodejs.org)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://www.npmjs.com/package/@rahul_dadhich15/regex-validation-toolkit)
@@ -26,12 +28,10 @@ A production-grade, zero-dependency TypeScript toolkit for reusable regular expr
 12. [Security Considerations](#security-considerations)
 13. [Email Validation Limitations](#email-validation-limitations)
 14. [IP Validation Limitations](#ip-validation-limitations)
-15. [Development & Testing Instructions](#development--testing-instructions)
-16. [Build Instructions](#build-instructions)
-17. [Supported Environments](#supported-environments)
-18. [API Reference](#api-reference)
-19. [Contributing](#contributing)
-20. [License & Changelog](#license--changelog)
+15. [Supported Environments](#supported-environments)
+16. [API Reference](#api-reference)
+17. [Contributing](#contributing)
+18. [License & Changelog](#license--changelog)
 
 ---
 
@@ -521,40 +521,6 @@ function validateRegistration(input: UserRegistrationInput) {
 - **Syntax Validation Only**: Validating IP address syntax does not check if the host is reachable, online, or assigned by an RIR/ISP.
 - **Strict Dotted-Decimal**: Non-standard octal or hex IPv4 representations (e.g. `0177.0.0.1` or `0x7f000001`) are rejected for security and consistency across operating systems.
 - **CIDR Prefixes**: Suffixes such as `/24` are rejected by default unless `{ allowCidr: true }` is explicitly provided.
-
----
-
-## Development & Testing Instructions
-
-```bash
-# Clone the repository
-git clone https://github.com/rahuldadhich1517-sys/regex-validation-toolkit.git
-cd regex-validation-toolkit
-
-# Install dependencies
-npm install
-
-# Run static type checking
-npm run typecheck
-
-# Run test suite
-npm run test:run
-
-# Run test suite with coverage
-npm run test:coverage
-```
-
----
-
-## Build Instructions
-
-```bash
-# Compile ESM, CommonJS, and TypeScript definitions
-npm run build
-
-# Validate package tarball contents
-npm pack --dry-run
-```
 
 ---
 

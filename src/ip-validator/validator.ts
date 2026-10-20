@@ -96,6 +96,59 @@ export function validateIP(input: unknown, options?: IPValidationOptions): IPVal
   }
 
   let addressPart = input;
+  let isBracketed = false;
+
+  // Handle bracketed IP addresses [::1] or [192.168.1.1]
+  if (addressPart.startsWith('[') || addressPart.endsWith(']')) {
+    if (!options?.allowBrackets) {
+      return {
+        valid: false,
+        errors: [
+          {
+            code: 'BRACKETED_NOT_ALLOWED',
+            message: 'Bracketed IP addresses are not allowed by current options',
+          },
+        ],
+      };
+    }
+    if (!addressPart.startsWith('[') || !addressPart.endsWith(']')) {
+      return {
+        valid: false,
+        errors: [
+          {
+            code: 'INVALID_IPV6_FORMAT',
+            message: 'Malformed bracketed IP address: must start with "[" and end with "]"',
+          },
+        ],
+      };
+    }
+    const inner = addressPart.slice(1, -1);
+    if (inner.includes('[') || inner.includes(']')) {
+      return {
+        valid: false,
+        errors: [
+          {
+            code: 'INVALID_IPV6_FORMAT',
+            message: 'Nested brackets are not allowed in IP address',
+          },
+        ],
+      };
+    }
+    if (inner.length === 0) {
+      return {
+        valid: false,
+        errors: [
+          {
+            code: 'EMPTY_INPUT',
+            message: 'Bracketed IP address content cannot be empty',
+          },
+        ],
+      };
+    }
+    addressPart = inner;
+    isBracketed = true;
+  }
+
   let cidrPrefix: number | undefined;
 
   // Handle CIDR notation (/prefix)
@@ -152,7 +205,10 @@ export function validateIP(input: unknown, options?: IPValidationOptions): IPVal
           };
         }
 
-        const normalized = cidrPrefix !== undefined ? `${parsed.normalized}/${cidrPrefix}` : parsed.normalized;
+        let normalized = cidrPrefix !== undefined ? `${parsed.normalized}/${cidrPrefix}` : parsed.normalized;
+        if (isBracketed) {
+          normalized = `[${normalized}]`;
+        }
         return {
           valid: true,
           version: 4,
@@ -199,7 +255,10 @@ export function validateIP(input: unknown, options?: IPValidationOptions): IPVal
         };
       }
 
-      const normalized = cidrPrefix !== undefined ? `${parsed.normalized}/${cidrPrefix}` : parsed.normalized;
+      let normalized = cidrPrefix !== undefined ? `${parsed.normalized}/${cidrPrefix}` : parsed.normalized;
+      if (isBracketed) {
+        normalized = `[${normalized}]`;
+      }
       return {
         valid: true,
         version: 6,

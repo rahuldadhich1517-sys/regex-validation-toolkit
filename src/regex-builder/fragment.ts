@@ -13,6 +13,9 @@ export function validateFlags(flags?: string): void {
   if (flags === undefined || flags === '') {
     return;
   }
+  if (typeof flags !== 'string') {
+    throw new RegexCompilationError(`RegExp flags must be a string, received ${typeof flags}`);
+  }
   const seen = new Set<string>();
   let hasU = false;
   let hasV = false;

@@ -153,10 +153,15 @@ export function parseIPv6(
     ipv4Words = [w6, w7];
 
     // Address prefix before IPv4
-    address = address.slice(0, lastColon);
-    if (address.endsWith(':') && !address.endsWith('::')) {
-      // e.g. "::ffff:" -> "::ffff"
-      address = address.slice(0, -1);
+    // If the colon before IPv4 was preceded by another colon (e.g. "::192.168.1.1" or "2001:db8::192.168.1.1"),
+    // retain the "::" compression marker in the prefix.
+    if (lastColon > 0 && address[lastColon - 1] === ':') {
+      address = address.slice(0, lastColon + 1);
+    } else {
+      address = address.slice(0, lastColon);
+      if (address.endsWith(':') && !address.endsWith('::')) {
+        address = address.slice(0, -1);
+      }
     }
   }
 

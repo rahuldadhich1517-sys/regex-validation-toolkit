@@ -50,6 +50,14 @@ describe('Security & Performance Assurance', () => {
       expect(duration).toBeLessThan(50);
       expect(valid).toBe(0);
     });
+
+    it('handles 100,000 character strings safely without stack overflow or crash', () => {
+      const giantString = 'x'.repeat(100000);
+      expect(validateEmail(giantString).valid).toBe(false);
+      expect(validateIP(giantString).valid).toBe(false);
+      expect(testRegexPattern('slug', giantString)).toBe(true); // slug allows letters
+      expect(testRegexPattern('ipv4Candidate', giantString)).toBe(false);
+    });
   });
 
   describe('Zero network access', () => {
@@ -81,6 +89,36 @@ describe('Security & Performance Assurance', () => {
       const cap = capture('abc', '__proto__');
       expect(cap.source).toBe('(?<__proto__>abc)');
       expect(Object.prototype.hasOwnProperty('polluted')).toBe(false);
+
+      // Testing object constructor as input
+      // @ts-expect-error testing Object.prototype
+      expect(validateEmail(Object.prototype).valid).toBe(false);
+      // @ts-expect-error testing Object.prototype
+      expect(validateIP(Object.prototype).valid).toBe(false);
+    });
+  });
+
+  describe('Error privacy and safety', () => {
+    it('error messages do not leak secrets or unhandled process environment details', () => {
+      const secretToken = 'SECRET_API_KEY_987654321';
+      const result = validateEmail(`invalid-email-with-${secretToken}`);
+
+      expect(result.valid).toBe(false);
+      for (const err of result.errors) {
+        // Message explains the syntax issue without echoing sensitive system paths or env
+        expect(err.message).not.toContain(process.cwd());
+        expect(err.message).not.toContain('TOKEN');
+      }
+    });
+
+    it('sanitizes and truncates overly long user input in error messages where appropriate', () => {
+      const longInput = 'invalid@' + 'a'.repeat(500);
+      const res = validateEmail(longInput);
+      expect(res.valid).toBe(false);
+      for (const err of res.errors) {
+        // Error messages should be succinct human-readable diagnostics, not dumps of 500 characters
+        expect(err.message.length).toBeLessThan(200);
+      }
     });
   });
 

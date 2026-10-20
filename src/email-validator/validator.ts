@@ -12,6 +12,10 @@ const DEFAULT_OPTIONS: Required<EmailValidationOptions> = {
   allowIpDomain: false,
 };
 
+function truncate(str: string, maxLen = 32): string {
+  return str.length > maxLen ? `${str.slice(0, maxLen)}...` : str;
+}
+
 // RFC 5322 permitted unquoted characters in local part
 const ASCII_LOCAL_PART_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/;
 
@@ -52,7 +56,7 @@ export function validateEmail(
     };
   }
 
-  // Whitespace checks
+  // Surrounding whitespace checks
   if (email !== email.trim()) {
     return {
       valid: false,
@@ -62,13 +66,6 @@ export function validateEmail(
           message: 'Email address must not contain leading or trailing whitespace',
         },
       ],
-    };
-  }
-
-  if (email.trim().length === 0) {
-    return {
-      valid: false,
-      errors: [{ code: 'EMPTY_INPUT', message: 'Email address cannot be empty or whitespace-only' }],
     };
   }
 
@@ -186,7 +183,7 @@ export function validateEmail(
         if (!isIPv4Address(ipLiteral)) {
           errors.push({
             code: 'IP_DOMAIN_INVALID',
-            message: `Invalid IP address literal domain: "${ipLiteral}"`,
+            message: `Invalid IP address literal domain: "${truncate(ipLiteral)}"`,
           });
         }
       }
@@ -246,28 +243,29 @@ export function validateEmail(
         if (label.length === 0) {
           continue; // already reported in DOMAIN_LABEL_EMPTY
         }
+        const displayLabel = truncate(label);
         if (label.length > 63) {
           errors.push({
             code: 'DOMAIN_LABEL_TOO_LONG',
-            message: `Domain label "${label}" exceeds maximum length of 63 characters`,
+            message: `Domain label "${displayLabel}" exceeds maximum length of 63 characters`,
           });
         }
         if (label.startsWith('-')) {
           errors.push({
             code: 'DOMAIN_LABEL_LEADING_HYPHEN',
-            message: `Domain label "${label}" cannot start with a hyphen`,
+            message: `Domain label "${displayLabel}" cannot start with a hyphen`,
           });
         }
         if (label.endsWith('-')) {
           errors.push({
             code: 'DOMAIN_LABEL_TRAILING_HYPHEN',
-            message: `Domain label "${label}" cannot end with a hyphen`,
+            message: `Domain label "${displayLabel}" cannot end with a hyphen`,
           });
         }
         if (!/^[a-zA-Z0-9-]+$/.test(label)) {
           errors.push({
             code: 'DOMAIN_INVALID_CHARACTERS',
-            message: `Domain label "${label}" contains invalid characters`,
+            message: `Domain label "${displayLabel}" contains invalid characters`,
           });
         }
       }

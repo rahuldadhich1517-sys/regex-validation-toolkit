@@ -188,22 +188,22 @@ const rawPatterns: Record<RegexPatternName, RawPatternData> = {
 /**
  * Catalogue of all registered regex pattern definitions.
  */
-export const regexPatterns: Readonly<Record<RegexPatternName, RegexPatternDefinition>> = (
-  Object.keys(rawPatterns) as RegexPatternName[]
-).reduce<Record<RegexPatternName, RegexPatternDefinition>>((acc, name) => {
-  const raw = rawPatterns[name];
-  acc[name] = {
-    name,
-    pattern: raw.pattern,
-    unanchoredPattern: raw.unanchored,
-    description: raw.description,
-    category: raw.category,
-    anchored: true,
-    limitations: raw.limitations,
-    createRegExp: (flags?: string): RegExp => new RegExp(raw.pattern, flags),
-  };
-  return acc;
-}, {} as Record<RegexPatternName, RegexPatternDefinition>);
+export const regexPatterns: Readonly<Record<RegexPatternName, RegexPatternDefinition>> = Object.freeze(
+  (Object.keys(rawPatterns) as RegexPatternName[]).reduce<Record<RegexPatternName, RegexPatternDefinition>>((acc, name) => {
+    const raw = rawPatterns[name];
+    acc[name] = Object.freeze({
+      name,
+      pattern: raw.pattern,
+      unanchoredPattern: raw.unanchored,
+      description: raw.description,
+      category: raw.category,
+      anchored: true,
+      limitations: raw.limitations,
+      createRegExp: (flags?: string): RegExp => new RegExp(raw.pattern, flags),
+    });
+    return acc;
+  }, {} as Record<RegexPatternName, RegexPatternDefinition>),
+);
 
 /**
  * Retrieves a regex pattern definition by name.

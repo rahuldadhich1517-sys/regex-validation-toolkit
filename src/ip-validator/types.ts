@@ -15,7 +15,8 @@ export type IPErrorCode =
   | 'CIDR_NOT_ALLOWED'
   | 'INVALID_CIDR_PREFIX'
   | 'ZONE_ID_NOT_ALLOWED'
-  | 'INVALID_ZONE_ID';
+  | 'INVALID_ZONE_ID'
+  | 'BRACKETED_NOT_ALLOWED';
 
 export interface IPValidationError {
   readonly code: IPErrorCode;
@@ -34,6 +35,12 @@ export interface IPValidationOptions {
    * @default false
    */
   readonly allowZoneId?: boolean | undefined;
+
+  /**
+   * Whether to allow bracketed IP addresses (e.g. "[192.168.1.1]" or "[2001:db8::1]").
+   * @default false
+   */
+  readonly allowBrackets?: boolean | undefined;
 
   /**
    * Enforce an explicit IP version (4 or 6). If specified, other IP versions will fail validation.
